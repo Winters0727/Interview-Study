@@ -1,11 +1,5 @@
 # Database
 
-### 기본 개념
-
-- 
-
-
-
 ### 데이터베이스 설계
 
 - 요구조건 분석 → 설계(개념적 설계 → 논리적 설계 → 물리적 설계) → 구현 → 운영 및 유지보수
@@ -13,7 +7,7 @@
   - 개체-관계 모델(ERM)을 통하여 개체 타입과 이들간의 관계타입을 이용하여 현실 세계를 개념적으로 표현
     - 개체-관계 모델 : 개체, 속성, 관계를 기호를 활용하여 데이터베이스의 전반적인 구조를 간단하게 표현한 모델
   - 산출물은 개체-관계 다이어그램(ERD)
-- 논리적 설계
+  - 논리적 설계
   - 개념적 설계에서 만들어진 구조를 기반으로 DBMS가 처리할 수 있는 데이터베이스의 논리적 구조를 설계하는 단계
   - 정규화가 진행되는 단계
   - 스키마(Schema) : 데이터베이스의 전체적인 구조와 제약조건에 대한 명세를 기술,정의한 것.
@@ -33,7 +27,7 @@
   - 클라이언트의 요청에 따라 각 어플리케이션의 스레드에서 데이터베이스에 접근하기 위해서는 Connection이 필요하다.
   - Connection pool은 이런 Connection을 여러 개 생성해 두어 저장해 놓은 **공간(캐시)**, 또는 이 공간의 Connection을 필요할 때 꺼내 쓰고 반환하는 **기법**을 말한다.
 
-  ![connection pool](image/database-connection pool.png)
+  ![connection pool](image/database-connection-pool.png)
 
 - DB에 접근하는 단계
 
@@ -41,7 +35,7 @@
   2. DB에 요청 시, pool에서 Connection 객체를 가져와 DB에 접근한다.
   3. 처리가 끝나면 다시 pool에 반환한다.
 
-  ![connection pool process](image/database-connection pool process.jpeg)
+  ![connection pool process](image/database-connection-pool-process.jpeg)
 
 - Connction이 부족하면?
 
@@ -144,7 +138,7 @@
   - 완료(Committed)
     - 트랜잭션이 성공적으로 종료되어 Commit 연산을 실행한 후의 상태
 
-  ![transaction process](image/database-transaction process.png)
+  ![transaction process](image/database-transaction-process.png)
 
 - 트랜잭션의 격리성
   
@@ -175,7 +169,43 @@
 
 
 
-### SQL vs NoSQL
+### SQL DB vs NoSQL DB
+
+#### SQL DB
+
+- 특징
+  - Schema : 스키마를 통해 테이블의 구조가 정의되야아 함
+  - Relation : 테이블 간에 관계(Join)를 통해 데이터를 파악, 데이터의 정합성
+  - 수직적 확장(Scale-Up) : CPU나 RAM 및 하드웨어 업데이트를 통해 서버의 성능을 향상
+  - ACID(Atomicity, Consistency, Isolation, Durability) 이론을 따름.
+
+#### NoSQL DB
+
+- 특징
+  - No Schema : 스키마를 통해 구조가 정의되지 않음. JSON,객체와 비슷한 Key-Value pair 형태의 데이터가 Document에 저장되고, Document들이 모여 Collection을 이룬다. (Document - Collection - Database)
+  - Non-relation : 관계(Join)이 존재하지 않아 정규화 처리가 없다. 따라서, 중복된 데이터가 존재할 수 있다.
+  - 수평적 향상(Scale-Out) : 서버를 추가하여 데이터를 분산 시킬 수 있음.
+  - CAP(Consistency, Availability, Partitions Tolerance)이론을 따름.
+    - 일관성(Consistency) : 트랜잭션이 성공적으로 수행되었다면 데이터베이스의 상태는 이전과 이후가 같아야한다.
+    - 가용성(Availability) : 모든 요청은 정상 응답을 받아야하며, 몇몇 노드에서 장애가 발생하더라도 시스템은 작동해야한다.
+    - 분리 내구성(Partitions Tolerance) : DB간 통신이 실패하는 경우에라도 시스템은 작동해야한다.
+
+
+
+### Optimistic Lock vs Pessimistic Lock
+
+- Optimistic Lock
+  - 버전정보, 타임스탬프 등을 이용하여 업데이트를 처리
+  - 정보로 사용할 열에 @Version Annotation을 부여해야함.
+  - 장점 : 유연성, 데드락이 일어날 가능성이 낮음
+  - 단점 : 에러 발생시에 그에 따른 처리가 필요
+- Pessimistic Lock
+  - 트랜잭션의 충돌이 발생한다고 가정하여 우선 락을 걸고, 첫번째 트랜잭션을 실행한다. 첫번째 트랜잭션이 커밋(Success of Fail)되면 락을 해제한다.
+  - 트랜잭션안에서 서비스 로직이 진행되어야한다.
+  - 장점 : 트랜잭션 충돌이 일어나지 않는다. (Lock)
+  - 단점 : 유연성이 떨어짐. 데드락이 발생할 가능성이 높음. 
+
+출처 : https://medium.com/@recepinancc/til-9-optimistic-vs-pessimistic-locking-79a349b76dc8
 
 
 
@@ -189,3 +219,25 @@
     - 공유 Lock이 하나라도 걸려있으면 배타적 Lock을 걸 수 없다.
   - 배타적 Lock(쓰기 잠금) : 배타적 Lock은 데이터를 변경하고자 할 때 사용되며, 트랜잭션이 완료될 때까지 유지된다.
     - 배타적 Lock은 하나만 가능하다. 즉, 다수의 배타적 Lock을 걸 수 없다.
+
+
+
+### 동시성
+
+- 정의
+  - DBMS는 다수의 사용자를 가정해야한다. 따라서 동시에 작용하는 트랜잭션의 상호 간섭 작용에서 데이터베이스를 보호할 수 있어야 하며,
+
+
+
+### 로드 밸런서(Load Balancer)
+
+- 정의
+  - 분산 시스템에서 서비스 요청을 여러 노드에 분배하는 역할
+  - 하나의 시스템에서 여러 개의 요청 노드 처리 가능
+    - 랜덤, 라운드 로빈, GSLB...
+- 세션 데이터 관리
+  - Sticky Session : 사용자의 요청이 고정된 노드에 전달.
+    - 단점
+      - 특정 서버 과부하 발생
+      - 서버 장애 시 세션 손실
+  - Session Server(Session Clustering) : 세션 서버를 통해 세션을 관리

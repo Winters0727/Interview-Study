@@ -1,15 +1,25 @@
 # Cache
 
+### 캐시
+
+- 정의
+  - 데이터나 값을 미리 복사해 놓은 임시 장소
+- 캐시의 지역성
+  - 시간적 지역성 : 특정 데이터가 한번 접근되었을 경우, 가까운 미래에 또 한번 데이터에 접근할 가능성이 높은 것
+  - 공간적 지역성 : 특정 데이터와 가까운 주소가 순서대로 접근되었을 경우
+
+
+
 ### 캐시서버
 
 - 웹 서비스의 3구조 : WEB-WAS(Web Application Server)-DB
+
   - 사용자의 수가 늘어나면 트랜잭션의 수가 많아지면서 DB에 부하가 생긴다.
   - DB의 부하를 줄이기 위해 캐시서버를 도입하는 것을 고려해야한다.
     - 캐시서버는 트랜잭션 과정에서 DB에 접근하기 전에 캐시서버에 저장된 값을 참조하여 DB의 부하를 줄여준다는 장점이 있다.
     - 캐시서버에 값이 저장되어 있으면 캐시히트, 없다면 캐시미스
     - 하지만, 캐시서버는 속도 향상을 위하여 주로 메모리를 사용하기 때문에 서버에 장애가 일어나면 메모리에 저장된 데이터가 손실된다는 단점이 있다.
 
-  
   
 
 ### Redis(Remote Dictionary Server)
@@ -57,5 +67,4 @@
 
 
 
-![daangn-redis vs memcahced](image/daangn-redis vs memcahced.jpeg)
-
+![daangn-redis vs memcahced](C:/Users/multicampus/Downloads/IT 질문/작성중/image/daangn-redis-vs-memcahced.jpeg)
