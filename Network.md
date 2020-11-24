@@ -98,3 +98,11 @@
     - 애플리케이션의 수가 많아지고 복잡해지면 테스트가 어려워짐
     - Monolithic에 비해 네트워크 레이턴시와 트래픽이 증가
     - 각각의 애플리케이션의 데이터 무결성을 책임지지 못함
+
+
+
+### CI/CD
+
+- 정의
+  - CI(Continuous-Integration) : Build, Test, Merge를 실시하는 통합 프로세스
+  - CD(Continuous-Deployment) : 애플리케이션 변경 사항이 테스트를 거쳐 자동으로 배포 되는 프로세스

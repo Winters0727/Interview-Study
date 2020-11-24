@@ -169,6 +169,58 @@
 
 
 
+### N+1 Problem
+
+- 정의
+
+  - 1 대 다(one-to-many), 또는 다 대 다(many-to-many) 관계의 데이터를 불러올 때 발생
+  - 대부분의 ORM은 Lazy-Loading 방식인데, N개의 데이터를 불러올 때 각각을 하나의 쿼리로 가져옴
+    - N개의 쿼리 + 1개의 쿼리(원래 작성했던 쿼리) = N+1
+    - N의 값이 커질수록 DB에 걸리는 부하가 많아진다.
+
+  ```ruby
+  @recent_articles = Article.order(published_at: :desc).limit(5)
+  
+  #in our view file
+  @recent_articles.each do |article|
+      Title: <%= article.title %> 
+      Author:<%= article.author.name %>
+  end
+  ```
+
+  ```SQL
+  Article Load (0.9ms) SELECT 'articles'.* FROM 'articles'
+  Author Load (0.4ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' = ? ORDER BY 'authors'.'id' ASC LIMIT 1 [["id", 1]]
+  Author Load (0.3ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' = ? ORDER BY 'authors'.'id' ASC LIMIT 1 [["id", 2]]
+  Author Load (0.4ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' = ? ORDER BY 'authors'.'id' ASC LIMIT 1 [["id", 3]]
+  Author Load (0.3ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' = ? ORDER BY 'authors'.'id' ASC LIMIT 1 [["id", 4]]    
+  Author Load (0.4ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' = ? ORDER BY 'authors'.'id' ASC LIMIT 1 [["id", 5]]
+  ```
+
+- 해결법 : Eager Loading
+
+  - `Model.find`에 의해 가능한한 적은 쿼리를 사용하여 반환된 객체들을 불러오는 매커니즘
+
+  ```ruby
+  #Using includes(:authors) will include authors model.
+  @recent_articles = Article.order(published_at: :desc).includes(:authors).limit(5)
+  
+  #in our view file
+  @recent_articles.each do |article|
+      Title: <%= article.title %> 
+      Author:<%= article.author.name %>
+  end
+  ```
+
+  ```sql
+  Article Load (0.4ms) SELECT 'articles'.* FROM 'articles'
+  Author Load (0.4ms) SELECT 'authors'.* FROM 'authors' WHERE 'authors'.'id' IN (1,2,3,4,5)
+  ```
+
+- Django에서는 `select_related`, `prefetch_related`가 존재
+
+
+
 ### SQL DB vs NoSQL DB
 
 #### SQL DB
@@ -219,13 +271,6 @@
     - 공유 Lock이 하나라도 걸려있으면 배타적 Lock을 걸 수 없다.
   - 배타적 Lock(쓰기 잠금) : 배타적 Lock은 데이터를 변경하고자 할 때 사용되며, 트랜잭션이 완료될 때까지 유지된다.
     - 배타적 Lock은 하나만 가능하다. 즉, 다수의 배타적 Lock을 걸 수 없다.
-
-
-
-### 동시성
-
-- 정의
-  - DBMS는 다수의 사용자를 가정해야한다. 따라서 동시에 작용하는 트랜잭션의 상호 간섭 작용에서 데이터베이스를 보호할 수 있어야 하며,
 
 
 
