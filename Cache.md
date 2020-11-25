@@ -68,3 +68,19 @@
 
 
 ![daangn-redis vs memcahced](C:/Users/multicampus/Downloads/IT 질문/작성중/image/daangn-redis-vs-memcahced.jpeg)
+
+
+
+
+
+### ElasticSearch
+
+- 정의
+  - Apache Lucene 라이브러리를 기반으로한 분산형 RESTful 오픈 소스 검색 및 분석 엔진
+  - 루비, 파이썬, C#, PHP 등 다양한 언어 지원
+- ELK Stack(ELK + Beats)
+  - 모든 유형의 구조화 및 비정형 데이터에서 실시간으로 실행 가능한 통찰력을 제공
+  - E - ElasticSearch : 검색 및 분석 엔진
+  - L - Logstash : 여러 소스에서 동시에 데이터를 수집하여 변환한 후, ElasticSearch 같은 'Stash'로 전송하는 서버 사이드 데이터 처리 파이프라인
+  - K - Kibana : ElasticSearch에서 차트와 그래프를 이용해 데이터를 시각화
+  - Beats : 다양한 유형의 데이터를 ElasticSearch 또는 Logstash로 전송하는 오픈 소스
