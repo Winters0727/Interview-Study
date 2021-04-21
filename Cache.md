@@ -67,7 +67,7 @@
 
 
 
-![daangn-redis vs memcahced](C:/Users/multicampus/Downloads/IT 질문/작성중/image/daangn-redis-vs-memcahced.jpeg)
+![daangn-redis vs memcahced](./image/daangn-redis-vs-memcahced.jpeg)
 
 
 
